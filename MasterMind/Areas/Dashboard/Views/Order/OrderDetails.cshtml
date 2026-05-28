@@ -1,0 +1,56 @@
+﻿@model MasterMind.Models.Order
+<div style="margin-top:100px;">
+	
+	<h2>Order Details - @Model.Id</h2>
+
+
+
+	<p><strong>Customer:</strong> @Model.Name (@Model.ApplicationUser.Email)</p>
+	<p><strong>Phone:</strong> @Model.PhoneNumber</p>
+	<p><strong>Address:</strong> @Model.Address, @Model.City, @Model.State, @Model.Pincode</p>
+	<p><strong>Total Amount:</strong> ₹@Model.TotalAmount</p>
+	<p><strong>Transaction Id:</strong> @Model.TransactionId</p>
+	<p><strong>Order ID:</strong> @Model.OrderId</p>
+	<p><strong>Status:</strong> <span class="badge @(Model.OrderStatus == "Shipped" ? "bg-success" : "bg-warning")">@Model.OrderStatus</span></p>
+	<p><strong>Tracking ID:</strong> @Model.TrackingId</p>
+	<p><strong>Estimated Delivery:</strong> @Model.EstimatedDeliveryDate?.ToString("dd MMM yyyy")</p>
+
+	<h3>Products</h3>
+	<table class="table">
+
+		<thead>
+			<tr>
+				<th>Product</th>
+				<th>Price</th>
+				<th>Quantity</th>
+				<th>Total</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			@foreach (var item in Model.OrderItems)
+			{
+				<tr>
+					<td>@item.Product.Name</td>
+					<td>₹@item.Product.Price</td>
+					<td>@item.Quantity</td>
+					<td>₹@(item.Product.Price * item.Quantity)</td>
+					<td>
+						
+					</td>
+				</tr>
+
+			}
+		
+
+
+			@if (Model.IsCancelled)
+			{
+				<div class="alert alert-danger">
+					<strong>Order Cancelled</strong><br />
+					<strong>Reason:</strong> @Model.CancellationReason
+				</div>
+			}
+		</tbody>
+	</table>
+</div>

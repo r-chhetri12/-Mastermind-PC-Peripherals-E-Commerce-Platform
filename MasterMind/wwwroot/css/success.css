@@ -1,0 +1,19 @@
+﻿.success-container {
+    max-width: 600px;
+    margin: 80px auto;
+    padding: 30px;
+    background: #ffffff;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+}
+
+.checkmark-circle {
+    font-size: 80px;
+    color: #28a745;
+}
+
+.order-actions .btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+}

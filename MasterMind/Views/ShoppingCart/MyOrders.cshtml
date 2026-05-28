@@ -1,0 +1,328 @@
+﻿@*  @model List<MasterMind.Models.Order>
+
+@{
+    ViewData["Title"] = "My Orders";
+}
+
+<h2>My Orders</h2>
+
+@if (!Model.Any())
+{
+    <p>You haven't placed any orders yet.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>@order.Id</td>
+                    <td>@order.OrderDate.ToString("dd-MM-yyyy")</td>
+                    <td>₹@order.TotalAmount</td>
+                    <td>
+                        <span class="badge @(order.OrderStatus == "Shipped" ? "bg-success" : "bg-warning")">
+                            @order.OrderStatus
+                        </span>
+                    </td>
+                    <td>
+                        <a asp-controller="ShoppingCart" asp-action="OrderDetails" asp-route-id="@order.Id" class="btn btn-sm btn-outline-info">View</a>
+                        @if (order.OrderStatus == "Pending" && !order.IsCancelled)
+                        {
+                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal-@order.Id">Cancel</button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="cancelModal-@order.Id" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <form asp-action="CancelOrder" asp-controller="ShoppingCart" method="post">
+                                        <input type="hidden" name="orderId" value="@order.Id" />
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Cancel Order #@order.Id</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <label>Reason for cancellation:</label>
+                                                <textarea name="reason" class="form-control" required></textarea>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-danger">Cancel Order</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                        else if (order.IsCancelled)
+                        {
+                            <span class="text-danger">Cancelled</span>
+                        }
+                    </td>
+                </tr>
+            <td>
+                <a asp-controller="ShoppingCart" asp-action="Invoice" asp-route-orderId="@order.Id" class="btn btn-sm btn-outline-primary">
+                    View Invoice
+                </a>
+            </td>
+
+            }
+        </tbody>
+    </table>
+}
+ 
+ *@
+@model List<MasterMind.Models.Order>
+
+@{
+    ViewData["Title"] = "My Orders";
+}
+<style>
+    /* Dark Theme Styling */
+    /* Overall Page Background */
+    body {
+        background-color: #3b82f6; /* soft light gray */
+        color: #1e293b; /* slate */
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* Cards */
+    .card {
+        background: linear-gradient(135deg, #1e1f26, #2c3e50);
+        border: 1px solid #e2e8f0;
+        border-radius: 1rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.04);
+        color: white;
+    }
+
+    /* Headings */
+    h2,
+    .card-title {
+        color: white; /* bright blue for highlights */
+    }
+
+    /* Buttons */
+    .btn-outline-info {
+        color: #3b82f6;
+        border-color: #3b82f6;
+        background-color: transparent;
+    }
+
+        .btn-outline-info:hover {
+            background-color: #3b82f6;
+            color: #ffffff;
+        }
+
+    .btn-outline-primary {
+        color: #2563eb;
+        border-color: #2563eb;
+    }
+
+        .btn-outline-primary:hover {
+            background-color: #2563eb;
+            color: #ffffff;
+        }
+
+    .btn-danger {
+        background-color: #ef4444;
+        border-color: #ef4444;
+    }
+
+        .btn-danger:hover {
+            background-color: #dc2626;
+            border-color: #dc2626;
+        }
+
+    /* Badges */
+    .badge.bg-success {
+        background-color: #22c55e !important; /* green */
+        color: white;
+    }
+
+    .badge.bg-warning {
+        background-color: #facc15 !important; /* yellow */
+        color: #78350f;
+    }
+
+    .badge.bg-danger {
+        background-color: #ef4444 !important; /* red */
+        color: white;
+    }
+
+    /* Alerts */
+    .alert-info {
+        background-color: #e0f2fe;
+        color: #0369a1;
+        border: 1px solid #bae6fd;
+        border-radius: 0.75rem;
+    }
+
+    /* Modals */
+    .modal-content {
+        background-color: #ffffff;
+        color: #1e293b;
+        border-radius: 1rem;
+        border: none;
+    }
+
+    .modal-header,
+    .modal-footer {
+        border-color: #e2e8f0;
+    }
+
+    /* Form Fields */
+    textarea.form-control,
+    input.form-control {
+        background-color: #f8fafc;
+        color: #1e293b;
+        border: 1px solid #cbd5e1;
+    }
+
+        textarea.form-control:focus,
+        input.form-control:focus {
+            background-color: #ffffff;
+            color: #1e293b;
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 0.2rem rgba(96, 165, 250, 0.25);
+        }
+
+    /* Labels */
+    .form-label {
+        color:white;
+    }
+
+    /* Image Handling */
+    .img-fluid {
+        border-radius: 0.75rem;
+        border: 1px solid #e2e8f0;
+    }
+
+    /* Buttons Close */
+    .btn-close {
+        filter: none;
+    }
+
+    /* Utility */
+    .text-primary {
+        color: #2563eb !important;
+    }
+
+
+    </style>
+<section class="py-5">
+    <div class="container px-4 px-lg-5">
+        <br /> <br /> <br /> <br /> 
+        <h2 class="text-center mb-5 text-primary fw-bold">📦 My Orders</h2>
+
+        @if (!Model.Any())
+        {
+            <div class="alert alert-info text-center">
+                You haven't placed any orders yet.
+            </div>
+        }
+        else
+        {
+            <div class="row row-cols-1 g-4">
+                @foreach (var order in Model)
+                {
+                    var firstItem = order.OrderItems?.FirstOrDefault();
+                    var productImage = firstItem?.Product?.Image ?? "/images/no-image.png"; // Fallback if image is null
+                    var productName = firstItem?.Product?.Name ?? "Product";
+
+                    <div class="col">
+                        <div class="card shadow-sm border-0">
+                            <div class="row g-0">
+                                <!-- Product Image -->
+                                <div class="col-md-3">
+                                    <img src="@productImage" class="img-fluid rounded-start" alt="@productName" style="height: 100%; object-fit: cover;" />
+                                </div>
+
+                                <!-- Order Info -->
+                                <div class="col-md-9">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start flex-wrap">
+                                            <div>
+                                                <h5 class="card-title mb-1 text-primary">Order #@order.Id</h5>
+                                                <p class="mb-1"><strong>Date:</strong> @order.OrderDate.ToString("dd-MM-yyyy")</p>
+                                                <p class="mb-1"><strong>Total:</strong> ₹@order.TotalAmount</p>
+                                                <p class="mb-2">
+                                                    <strong>Status:</strong>
+                                                    <span class="badge px-3 py-2 rounded-pill
+                                                        @(order.IsCancelled ? "bg-danger" :
+                                                        order.OrderStatus == "Shipped" ? "bg-success" :
+                                                        "bg-warning text-dark")">
+                                                        @(order.IsCancelled ? "Cancelled" : order.OrderStatus)
+                                                    </span>
+                                                </p>
+                                            </div>
+
+                                            <div class="text-end d-flex flex-column gap-2">
+                                                <a asp-controller="ShoppingCart" asp-action="OrderDetails" asp-route-id="@order.Id" class="btn btn-outline-info btn-sm rounded-pill">
+                                                    View Details
+                                                  
+
+                                                </a>
+                                                @if (!string.IsNullOrEmpty(order.TrackingId))
+                                                {
+                                                    <p><strong>Tracking ID:</strong> @order.TrackingId</p>
+                                                    <p><strong>Estimated Delivery:</strong> @order.EstimatedDeliveryDate?.ToString("dd MMM yyyy")</p>
+                                                }
+
+
+                                                <a asp-controller="ShoppingCart" asp-action="Invoice" asp-route-orderId="@order.Id" class="btn btn-outline-primary btn-sm rounded-pill">
+                                                    View Invoice
+                                                </a>
+
+                                                @if (order.OrderStatus == "Pending" && !order.IsCancelled)
+                                                {
+                                                    <button class="btn btn-danger btn-sm rounded-pill" data-bs-toggle="modal" data-bs-target="#cancelModal-@order.Id">
+                                                        Cancel Order
+                                                    </button>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Cancel Modal -->
+                            @if (order.OrderStatus == "Pending" && !order.IsCancelled)
+                            {
+                                <div class="modal fade" id="cancelModal-@order.Id" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <form asp-action="CancelOrder" asp-controller="ShoppingCart" method="post">
+                                            <input type="hidden" name="orderId" value="@order.Id" />
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Cancel Order #@order.Id</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <label class="form-label">Reason for cancellation:</label>
+                                                    <textarea name="reason" class="form-control" required></textarea>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-danger">Confirm Cancel</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            }
+                          
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</section>

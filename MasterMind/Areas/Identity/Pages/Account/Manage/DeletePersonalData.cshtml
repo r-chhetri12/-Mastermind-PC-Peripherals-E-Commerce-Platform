@@ -1,0 +1,56 @@
+﻿@page
+@model DeletePersonalDataModel
+@{
+    ViewData["Title"] = "Delete Personal Data";
+    ViewData["ActivePage"] = ManageNavPages.PersonalData;
+}
+@{
+    Layout = "~/Areas/Identity/Pages/Account/Manage/_ManageNav.cshtml";
+    <!-- Fixed Layout Path -->
+}
+<h3>@ViewData["Title"]</h3>
+
+
+
+<div class="alert alert-warning" role="alert">
+    <p>
+        <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
+    </p>
+</div>
+
+<div>
+    <form id="delete-user" method="post" class="form-group">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        @if (Model.RequirePassword)
+        {
+            <div class="form-group">
+                <label asp-for="Input.Password"></label>
+                <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" />
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+        }
+        <br />
+       
+        
+        <button class="btn btn-danger" type="submit">Delete data and close my account</button>
+    </form>
+    <br />
+    <br />
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+              setTimeout(function () {
+            var alert = document.getElementById('status-alert');
+            if (alert) {
+                alert.classList.add('fade'); // Add fade class to trigger the fade-out effect
+                alert.classList.remove('show'); // Removes 'show' class to start fading
+                setTimeout(function () {
+                    alert.remove(); // Remove the alert element after fading out
+                }, 150); // Adjust delay to match Bootstrap's fade transition
+            }
+        }, 2000); // Delay before fade starts (2 seconds)
+    </script>
+
+}

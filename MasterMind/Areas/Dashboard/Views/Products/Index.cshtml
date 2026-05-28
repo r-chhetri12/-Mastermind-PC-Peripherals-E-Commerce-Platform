@@ -1,0 +1,141 @@
+﻿@model IEnumerable<MasterMind.Models.Product>
+
+@{
+	ViewData["Title"] = "Products";
+}
+
+<!-- Begin Page Content -->
+<div class="container-fluid mt-4">
+
+	@if (TempData["SuccessMessage"] != null)
+	{
+		<div id="alertBox" class="alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow" style="z-index: 1050;">
+			<strong>Success!</strong> @TempData["SuccessMessage"]
+		</div>
+	}
+
+
+	<!-- Page Header -->
+	<div class="card shadow-lg bg-light text-dark">
+		<div class="card-header bg-secondary text-white text-center">
+			<h3 class="font-weight-bold m-0">All Products</h3>
+		</div>
+
+		<div class="card-body">
+			<div class="text-end mb-3">
+				<a asp-action="Create" class="btn btn-success px-3">
+					<i class="fas fa-plus-circle"></i> Add New Product
+
+
+
+				</a>
+			</div>
+
+			            <input type="text" id="productSearch" class="form-control w-25" placeholder="🔍 Search by Product Name..." />
+			<div class="table-responsive">
+				<table class="table table-hover table-bordered" id="dataTable" width="100%" cellspacing="0">
+					<thead class="table-dark">
+						<tr>
+							<th>Image</th>
+							<th>Product Name</th>
+							<th>Description</th>
+							<th>Specification</th>
+							<th>Price</th>
+							<th>Category</th>
+
+							<th>Quantity</th>
+							<th class="text-center">Actions</th>
+							
+
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var item in Model)
+						{
+							<tr>
+
+
+								<td class="text-center" style="width:225px">
+									<img src="@item.Image" width="150" height="150" class="rounded shadow" />
+								</td>
+								<td>@Html.DisplayFor(modelItem => item.Name)</td>
+								<td style="width:180px">@Html.DisplayFor(modelItem => item.Description)</td>
+
+								<!-- Increase the width of Specification column -->
+								<td class="w-25">@Html.Raw(item.Specification)</td>
+
+								<td>₹ @item.Price.ToString("N2")</td> <!-- Corrected Price Display -->
+								<td>@Html.DisplayFor(modelItem => item.Category.Name)</td> <!-- Show Category Name -->
+								<td>@item.Quantity</td>
+								<!-- Center align & display buttons in vertical layout -->
+								<td class="text-center">
+									<div class="d-flex flex-column gap-2">
+										<a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm mb-3 mt-3">
+											<i class="fas fa-edit"></i> Edit
+										</a>
+										<a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm mb-3">
+											<i class="fas fa-eye"></i> Details
+										</a>
+										<a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm mb-3">
+											<i class="fas fa-trash-alt"></i> Delete
+										</a>
+								
+									</div>
+								
+								</td>
+								
+							</tr>
+
+						}
+					</tbody>
+				</table>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+
+	<!--  JavaScript to Auto-Close Alert in 3 Seconds -->
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			var alertBox = document.getElementById("alertBox");
+			if (alertBox) {
+				setTimeout(function () {
+					alertBox.style.transition = "opacity 0.5s ease-out";
+					alertBox.style.opacity = "0";
+					setTimeout(function () {
+						alertBox.remove();
+					}, 500);
+				}, 3000); // 3 seconds
+			}
+		});
+	</script>
+
+	<script>
+		$(document).ready(function () {
+			$('#dataTable').DataTable({
+				"paging": true,
+				"searching": true,
+				"ordering": true,
+				"info": true
+			});
+		});
+	</script>
+	<script>
+		document.getElementById("productSearch").addEventListener("keyup", function () {
+			const filter = this.value.toLowerCase();
+			const rows = document.querySelectorAll("table tbody tr");
+
+			rows.forEach(row => {
+				const productName = row.querySelector("td:nth-child(2)")?.textContent.toLowerCase() || "";
+				row.style.display = productName.includes(filter) ? "" : "none";
+			});
+		});
+	</script>
+
+}

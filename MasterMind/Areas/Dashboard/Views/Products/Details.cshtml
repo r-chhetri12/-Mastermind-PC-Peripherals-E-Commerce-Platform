@@ -1,0 +1,44 @@
+﻿@model MasterMind.Models.Product
+
+@{
+    ViewData["Title"] = "Product Details";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+            <h3 class="fw-bold"><i class="fas fa-info-circle"></i> Product Details</h3>
+        </div>
+
+        <div class="card-body">
+            <dl class="row">
+                <!-- Product Name -->
+                <dt class="col-sm-3 fw-bold">Product Name</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Name)</dd>
+
+                <!-- Description -->
+                <dt class="col-sm-3 fw-bold">Description</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Description)</dd>
+
+                <!-- Price -->
+                <dt class="col-sm-3 fw-bold">Price</dt>
+                <dd class="col-sm-9">₹ @Html.DisplayFor(model => model.Price)</dd>
+
+                <!-- Product Image -->
+                <dt class="col-sm-3 fw-bold">Product Image</dt>
+                <dd class="col-sm-9">
+                    <img src="@Model.Image" alt="Product Image" class="rounded shadow" style="max-width: 200px;">
+                </dd>
+            </dl>
+
+            <div class="text-center mt-4">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning px-4">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                <a asp-action="Index" class="btn btn-outline-secondary px-4 ms-2">
+                    <i class="fas fa-arrow-left"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

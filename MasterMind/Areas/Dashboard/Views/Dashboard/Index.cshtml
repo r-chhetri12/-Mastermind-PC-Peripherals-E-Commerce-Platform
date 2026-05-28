@@ -1,0 +1,161 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h2 class="text-center mb-4">Admin Dashboard</h2>
+<div class="container-fluid">
+    <!-- Top Summary Boxes -->
+    <div class="row g-4 mb-4">
+        <!-- Total Revenue -->
+        <div class="col-md-6">
+            <div class="card text-white bg-success shadow h-100 py-3">
+                <div class="card-body text-center">
+                    <h4>Total Revenue</h4>
+                    <h2>₹ @ViewBag.TotalRevenue.ToString("N2")</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Sold -->
+        <div class="col-md-6">
+            <div class="card text-white bg-info shadow h-100 py-3">
+                <div class="card-body text-center">
+                    <h4>Products Sold</h4>
+                    <h2>@ViewBag.TotalProductsSold</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts and Metrics -->
+    <div class="row g-4">
+        <!-- Charts Section -->
+        <div class="col-lg-8">
+            <div class="row">
+                <!-- Daily Revenue Chart -->
+                <div class="col-12">
+                    <div class="card shadow">
+                        <div class="card-header bg-primary text-white">
+                            Daily Revenue
+                        </div>
+                        <div class="card-body">
+                            <canvas id="salesChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Summary Boxes -->
+        <div class="col-lg-4">
+            <!-- Daily Orders -->
+            <div class="card shadow mb-4"
+                 style="background: linear-gradient(to right, #00c6ff, #0072ff); color: white;">
+                <div class="card-body text-center">
+                    <h5 class="text-uppercase">Daily Orders</h5>
+                    <h2 id="dailyOrdersCount">--</h2>
+                </div>
+            </div>
+
+            <!-- Monthly Orders -->
+            <div class="card shadow"
+                 style="background: linear-gradient(to right, #00c6ff, #0072ff); color: white;">
+                <div class="card-body text-center">
+                    <h5 class="text-uppercase">Monthly Orders</h5>
+                    <h2 id="monthlyOrdersCount">--</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="card shadow mt-4">
+    <div class="card-header bg-dark text-white">
+        Latest Ordered Products
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered table-striped text-center">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Product Name</th>
+                    <th>Order Date</th>
+                    <th>Price (₹)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.LatestOrderedProducts)
+                {
+                    <tr>
+                        <td>@item.OrderId</td>
+                        <td>@item.ProductName</td>
+                        <td>@item.OrderDate.ToString("dd MMM yyyy")</td>
+                        <td>₹ @item.Price.ToString("N2")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    fetch('/Dashboard/Order/GetDailySales')
+        .then(response => response.json())
+        .then(data => {
+            const labels = data.map(item => item.date);
+            const sales = data.map(item => item.totalSales);
+
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Daily Revenue',
+                        data: sales,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                }
+            });
+        });
+          // Daily Revenue Line Chart
+        fetch('/Dashboard/Order/GetDailySales')
+            .then(response => response.json())
+            .then(data => {
+                const labels = data.map(item => item.date);
+                const sales = data.map(item => item.totalSales);
+
+                const ctx = document.getElementById('salesChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Daily Revenue (₹)',
+                            data: sales,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        }]
+                    }
+                });
+            });
+
+        // daily orders count
+             fetch('/Dashboard/Order/GetDailyAndMonthlyOrderCount')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('dailyOrdersCount').textContent = data.dailyOrders;
+                    document.getElementById('monthlyOrdersCount').textContent = data.monthlyOrders;
+                });
+</script>
+
+

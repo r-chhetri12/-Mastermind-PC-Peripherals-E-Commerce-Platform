@@ -1,0 +1,16 @@
+﻿/* wwwroot/css/print.css */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        background: white;
+    }
+
+    .container {
+        width: 100%;
+    }
+}

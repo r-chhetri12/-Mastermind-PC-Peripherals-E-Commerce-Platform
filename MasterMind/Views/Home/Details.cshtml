@@ -1,0 +1,65 @@
+﻿@* @model MasterMind.Models.Product
+
+
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="@Model.Image" class="img-fluid" alt="@Model.Name">
+        </div>
+        <div class="col-md-6">
+            <h2>@Model.Name</h2>
+            <p><strong>Price:</strong> @Model.Price</p>
+            <p>@Model.Description</p>
+
+                @if (Model.Quantity == 0)
+            {
+                <span class="badge bg-danger">Out of Stock</span>
+                <br />
+                <button class="btn btn-secondary mt-3" disabled>Add to Cart</button>
+            }
+            else
+            {
+                <span class="badge bg-success">In Stock: @Model.Quantity</span>
+                <br />
+
+            <a href="@Url.Action("Products", "Home")" class="btn btn-secondary">Back</a>
+            <a href="@Url.Action("AddToCart", "ShoppingCart", new { productId = Model.Id })" class="btn btn-outline-dark">Add to Cart</a>
+        </div>
+    </div>
+</div>
+ *@
+ @model MasterMind.Models.Product
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+          
+            <img src="@Model.Image" alt="@Model.Name" class="img-fluid" />
+        </div>
+        <div class="col-md-6">
+            <br />  <br />  <br />  <br />
+            <h2>@Html.Raw(Model.Name)</h2>
+            <h4>₹@Model.Price</h4>
+            <p>@Model.Description</p>
+            <p>@Html.Raw(Model.Specification)</p>
+
+            @if (Model.Quantity == 0)
+            {
+                <span class="badge bg-danger">Out of Stock</span>
+                <br />
+                <button class="btn btn-secondary mt-3" disabled>Add to Cart</button>
+            }
+            else
+            {
+                <span class="badge bg-success">In Stock: @Model.Quantity</span>
+                <br />
+
+                <a href="@Url.Action("Products", "Home")" class="btn btn-secondary">Back</a>
+                <a href="@Url.Action("AddToCart", "ShoppingCart", new { productId = Model.Id })" class="btn btn-primary mt-3">
+                    Add to Cart
+                </a>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,79 @@
+﻿@model List<Product>
+
+@* @foreach (var product in Model)
+{
+	<div class="col mb-5">
+		<div class="card h-100 product-card">
+			<img class="card-img-top" src="@product.Image" alt="@product.Name" />
+
+			<div class="card-body p-4">
+				<div class="text-center">
+					<h5 class="fw-bolder">@product.Name</h5>
+					<p>₹@product.Price</p>
+
+					@if (product.Quantity == 0)
+					{
+						<span class="badge bg-danger">Out of Stock</span>
+					}
+					else
+					{
+						<span class="badge bg-success">In Stock: @product.Quantity</span>
+					}
+				</div>
+			</div>
+
+			<div class="card-footer p-4 pt-0 text-center d-flex flex-column gap-2">
+				<a href="@Url.Action("Details", "Home", new { id = product.Id })" class="btn btn-primary">View</a>
+
+				@if (product.Quantity == 0)
+				{
+					<button class="btn btn-outline-dark" disabled>Out of Stock</button>
+				}
+				else
+				{
+					<a href="@Url.Action("AddToCart", "ShoppingCart", new { productId = product.Id })" class="btn btn-outline-dark">Add to Cart</a>
+				}
+			</div>
+		</div>
+	</div>
+}
+ *@
+<div class="row">
+    @foreach (var product in Model)
+    {
+        <div class="col-md-4 mb-5 d-flex align-items-stretch">
+            <div class="card h-100 product-card">
+                <img class="card-img-top" src="@product.Image" alt="@product.Name" />
+
+                <div class="card-body p-4">
+                    <div class="text-center">
+                        <h5 class="fw-bolder">@product.Name</h5>
+                        <p>₹@product.Price</p>
+
+                        @if (product.Quantity == 0)
+                        {
+                            <span class="badge bg-danger">Out of Stock</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">In Stock: @product.Quantity</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="card-footer p-4 pt-0 text-center d-flex flex-column gap-2">
+                    <a href="@Url.Action("Details", "Home", new { id = product.Id })" class="btn btn-primary">View</a>
+
+                    @if (product.Quantity == 0)
+                    {
+                        <button class="btn btn-outline-dark" disabled>Out of Stock</button>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("AddToCart", "ShoppingCart", new { productId = product.Id })" class="btn btn-outline-dark">Add to Cart</a>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>

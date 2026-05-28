@@ -1,0 +1,70 @@
+﻿@model MasterMind.Models.Order
+
+@{
+    ViewData["Title"] = "Invoice";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+
+
+    // decimal gstRate = 0.2m;
+    // decimal gstAmount = Model.TotalAmount * gstRate;
+    decimal grandTotal = Model.TotalAmount;
+    // string gstNumber = "27ABCDE1234F1Z5"; // Your real GST number
+}
+
+
+    <link rel="stylesheet" href="~/css/invoice.css" asp-append-version="true" />
+
+
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-dark text-white">
+            <h3>Invoice - Order #@Model.Id</h3>
+            <small>@Model.OrderDate.ToString("dd MMM yyyy")</small>
+        </div>
+        <div class="card-body">
+            <h5>Customer Details</h5>
+            <p>
+                <strong>Name:</strong> @Model.Name <br />
+                <strong>Phone:</strong> @Model.PhoneNumber <br />
+                <strong>Address:</strong> @Model.Address, @Model.City, @Model.State - @Model.Pincode
+            </p>
+
+            <hr />
+
+            <h5>Order Details</h5>
+            <table class="table table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price (₹)</th>
+                        <th>Subtotal (₹)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.OrderItems)
+                    {
+                        <tr>
+                            <td>@item.Product.Name</td>
+                            <td>@item.Quantity</td>
+                            <td>₹@item.Price</td>
+                            <td>₹@(item.Quantity * item.Price)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="text-end mt-4">
+                <p><strong>Subtotal:</strong> ₹@Model.TotalAmount</p>
+               
+                <h4>Grand Total: ₹@grandTotal</h4>
+              
+            </div>
+        </div>
+        <div class="container mt-5 no-print">
+            <a onclick="window.print()" class="btn btn-success">🖨️Print Invoice</a>
+        </div>
+       
+
+    </div>
+</div>

@@ -1,0 +1,13 @@
+﻿@model string
+
+@if (!string.IsNullOrEmpty(Model))
+{
+    var statusMessageClass = Model.StartsWith("Error") ? "danger" : "success";
+    var icon = statusMessageClass == "danger" ? "bi-x-circle" : "bi-check-circle";
+
+    <div class="alert alert-@statusMessageClass d-flex align-items-center alert-dismissible fade shadow-sm p-2 small position-absolute" role="alert" id="status-alert" style="top: 20px; left: 50%; transform: translateX(-50%); z-index: 1050; max-width: 300px;">
+        <i class="bi @icon me-2"></i>
+        <div class="flex-grow-1">@Model</div>
+    </div>
+
+}
