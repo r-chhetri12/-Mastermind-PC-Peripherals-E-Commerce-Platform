@@ -73,8 +73,8 @@ Integrated with **Razorpay** for secure and seamless payment processing at check
 
 ## 👥 Contributors
 
-- [Your Name](https://github.com/yourusername) — Web Developer
-- [Collaborator Name](https://github.com/collaboratorusername) — Web Stack Developer
+- [Your Name](https://github.com/chhetri12) — Web Developer
+- [Collaborator Name](https://github.com/bilalkhan03) — Web Stack Developer
 
 ---
 
